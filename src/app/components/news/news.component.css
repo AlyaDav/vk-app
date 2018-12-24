@@ -1,0 +1,29 @@
+.example-card {
+    max-width: 400px;
+    background-color: white;
+    page-break-after: auto;
+  }
+  
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+  }
+img{
+    max-width: 220px;
+}
+.white-icon {
+  color: rgb(82, 82, 228);
+}
+
+.white-icon svg {
+  fill:  rgb(82, 82, 228);
+}
+.card{
+
+  padding: 20px;
+}
+.text{
+  width: max-content;
+  text-align: center;
+  display: -webkit-box;
+}

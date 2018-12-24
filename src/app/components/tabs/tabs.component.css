@@ -1,0 +1,12 @@
+.mat-tab-group {
+    margin-bottom: 48px;
+  }
+  .center{
+    text-align: -webkit-center;
+  }
+  .label{
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    font-style: italic;
+  }

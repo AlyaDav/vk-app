@@ -1,0 +1,11 @@
+<mat-tab-group class="label" mat-align-tabs="center" (selectedTabChange)="clickTab($event)">
+  <mat-tab label="Все новости">
+    <app-news class="center" [tab]="tab" [listNews]="listNews" [titleGroups]="titleGroups"></app-news>
+  </mat-tab>
+  <mat-tab label="Избранное">
+      <app-news [tab]="tab" [listNews]="listNews" [titleGroups]="titleGroups"></app-news>
+  </mat-tab>
+  <mat-tab label="Неизбранное">
+      <app-news [tab]="tab" [listNews]="listNews" [titleGroups]="titleGroups"></app-news>
+  </mat-tab>
+</mat-tab-group>
