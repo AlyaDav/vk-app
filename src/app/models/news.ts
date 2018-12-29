@@ -10,4 +10,7 @@ export class News{
     src?:string[];
     liked:boolean=false;  
     srcAudio?:Audio[];
+    group_id?: number;
+    group_name?: string;
+    group_img?: string;
 }

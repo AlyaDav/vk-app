@@ -1,5 +1,4 @@
-import { Component, OnInit, ElementRef, Input } from '@angular/core';
-
+import { Component, OnInit, Input } from '@angular/core';
 import { News } from 'src/app/models/news';
 import { NewsService } from 'src/app/services/news.service';
 
@@ -11,15 +10,13 @@ import { NewsService } from 'src/app/services/news.service';
 export class NewsComponent implements OnInit {
 
   @Input() listNews: News[];
-  @Input() titleGroups: string[];
   @Input() tab: string;
 
-  allNews: News[];
+  allNews: News[] = [];
 
   constructor(private newsService: NewsService) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   ngOnChanges() {
     if (this.tab) {
@@ -40,6 +37,6 @@ export class NewsComponent implements OnInit {
   }
 
   clickLike(i: number) {
-    this.listNews[i].liked=this.newsService.changeFavoriteNews(this.listNews, i);   
+    this.listNews[i].liked = this.newsService.changeFavoriteNews(this.listNews, i);
   }
 }

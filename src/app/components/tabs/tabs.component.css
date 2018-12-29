@@ -5,8 +5,13 @@
     text-align: -webkit-center;
   }
   .label{
-    color: black;
+    color: rgb(0, 0, 0);
     font-family: 'Times New Roman', Times, serif;
     font-size: 18px;
     font-style: italic;
   }
+ .mat-progress-bar{
+  width: 115px;
+  padding-left: 46%;
+ }
+ 

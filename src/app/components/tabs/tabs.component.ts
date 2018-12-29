@@ -1,110 +1,83 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { News } from 'src/app/models/news';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Audio } from 'src/app/models/audio';
 import { ApiService } from 'src/app/services/api.service';
+import { NewsService } from 'src/app/services/news.service';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.css']
+  styleUrls: ['./tabs.component.css'],
 })
 export class TabsComponent implements OnInit {
 
-  constructor(private apiService:ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    private newsService: NewsService
+  ) { }
 
-  listNews: News[];
-  titleGroups: string[];
+  listNews: News[] = [];
   newsSrc: string[] = [];
   tab: string;
   srcAudio: Audio[] = [];
-  
+  allIdGroups: string = '';
+  newData: News[] = [];
+  loadingData: boolean = false;
+  nextNews: string = '';
+
+
+  @HostListener('window:scroll', ['$event']) onScrollEvent($event) {
+    let a = event.srcElement['scrollingElement']['offsetHeight'];
+    let b = event.srcElement['scrollingElement']['scrollTop'];
+    if (a - b < (0.15 * a) && !this.loadingData) {
+      this.getNewData(this.nextNews);
+      this.loadingData = true;
+    }
+  }
 
   ngOnInit() {
-    this.getData();
-    localStorage.setItem('likeItem', '[]')
-  }
-  getData() {
-    this.apiService.getData()
-      .subscribe(data => {
-        this.titleGroups = data['response']['groups']
-        this.listNews = data['response']['items']
-        this.listNews.forEach((news) => {
-          if ((news['type'] === 'post') && (news.attachments)) {
-            this.newsSrc = [];
-            news.attachments.forEach(elem => {
-              if ((elem.type = 'photo') && (elem.photo)) {
-                this.newsSrc.push(elem.photo['photo_130'])
-              }
-              if ((elem.type = 'photo') && (elem.video)) {
-                if (elem.video['first_frame_160']) {
-                  this.newsSrc.push(elem.video['first_frame_160']);
-                }
-                if (elem.video['photo_130']) {
-                  this.newsSrc.push(elem.video['photo_130']);
-                }
-              }
-              if ((elem.type = 'photo') && (elem.doc)) {
-                this.newsSrc.push(elem.doc['url'])
-              }
-              if ((elem.type = 'photo') && (elem.link)) {
-                this.newsSrc.push(elem.link.photo['photo_130'])
-                news.text += elem.link.title;
-              }
-            })
-            news.src = this.newsSrc;
-          }
-
-          if ((news['type'] === 'post') && (news['copy_history']) && (news['copy_history']['attachments'])) {
-            this.newsSrc = [];
-            news['copy_history']['attachments'].forEach(elem => {
-              if ((elem.type = 'photo') && (elem.photo)) {
-                this.newsSrc.push(elem.photo['photo_130'])
-              }
-              if ((elem.type = 'audio') && (elem.audio)) {
-                this.newsSrc.push(elem.audio['url'])
-              }
-            })
-            news.src = this.newsSrc;
-          }
-          if ((news['type'] === 'wall_photo') && (news['photos'])) {
-            this.newsSrc = [];
-            news.src = [];
-            news['photos']['items'].forEach(element => {
-              if ((element)) {
-                this.newsSrc.push(element['photo_130'])
-              }
-            });
-            news.src = this.newsSrc;
-          }
-
-          if ((news['type'] === 'video') && (news['video']['items'])) {
-            this.newsSrc = [];
-            news.src = [];
-            news['video']['items'].forEach(element => {
-              if ((element)) {
-                this.newsSrc.push(element['photo_130'])
-              }
-            });
-            news.src = this.newsSrc;
-          }
-
-          if ((news['type'] === 'audio') && (news['audio']['items'])) {
-            this.srcAudio = [];
-            news['audio']['items'].forEach(element => {
-              if ((element)) {
-                this.srcAudio.push({ url: element['url'], title: element.title })
-              }
-            });
-            news.srcAudio = this.srcAudio;
-          }
-
-        })
-      });
+    this.getNewData('');
+    localStorage.setItem('likeItem', '[]');
   }
 
   clickTab(event: MatTabChangeEvent) {
     this.tab = event.tab.textLabel;
   }
+
+  getGroup(listNews: News[]) {
+    this.apiService.getIdGroup(this.allIdGroups).subscribe(data => {
+      listNews.forEach((news) => {
+        if (news.group_id) {
+          data['response'].forEach(element => {
+            if (news.group_id * (-1) === element['id']) {
+              news.group_name = element['name'];
+              news.group_img = element['photo_50'];
+            }
+          });
+        }
+        this.loadingData = false;
+      });
+    })
+  }
+
+  getNewData(next: string) {
+    let newList: News[];
+    this.apiService.getData(next)
+      .subscribe(data => {
+        newList = data['response']['items'];
+        this.nextNews = data['response']['next_from'];
+        newList.forEach((news) => {
+          if (news.source_id < 0) {
+            this.allIdGroups = this.allIdGroups + news.source_id * (-1) + ', ';
+          }
+          this.listNews.push(this.newsService.changeListNews(news));
+        });
+        if (this.allIdGroups) {
+          this.getGroup(newList);
+        }
+      });
+  }
+
 }
+

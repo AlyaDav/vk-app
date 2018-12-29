@@ -6,18 +6,21 @@ import { HeaderComponent } from './components/header/header.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { NewsComponent } from './components/news/news.component';
 
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
-import {MatCardModule} from '@angular/material/card';
-import {MatButtonModule} from '@angular/material/button';
+import { HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule } from '@angular/common/http';
+import { MatCardModule } from '@angular/material/card';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatButtonModule } from '@angular/material/button';
 import { MomentModule } from 'angular2-moment';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatIconModule} from '@angular/material/icon';
-
-
-
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon';
+import { InterceptService } from './services/interceptor';
+import { ApiService } from './services/api.service';
+import {ScrollDispatchModule} from '@angular/cdk/scrolling';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,15 +32,25 @@ import {MatIconModule} from '@angular/material/icon';
     BrowserModule,
     MatTabsModule,
     BrowserAnimationsModule,
-    HttpClientModule, 
+    HttpClientModule,
     HttpClientJsonpModule,
     MatCardModule,
     MatButtonModule,
     MomentModule,
     NoopAnimationsModule,
-    MatIconModule
+    MatIconModule,
+    ScrollingModule,
+    ScrollDispatchModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    ApiService, {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptService,
+      multi: true
+    }
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
