@@ -20,45 +20,46 @@ export class NewsService {
 
   getFavoriteNews(allNews: News[]): News[] {
     let favoriteNews: News[] = [];
-    let likeItems = JSON.parse(localStorage.getItem('likeItem'))
-    allNews.forEach(elem => {
-      likeItems.forEach(item => {
-        if (elem.source_id == item) {
-          favoriteNews.push(elem);
-        }
-      })
-    })
-    return favoriteNews;
+    let IdsLikeItems = JSON.parse(localStorage.getItem('likeItem'))
+    
+    allNews.filter(function(elem) {
+      return IdsLikeItems.some(function(element) {
+        if (elem.source_id == element && element == elem.source_id) 
+        return favoriteNews.push(elem);
+      }
+      )});
+      return favoriteNews;
   }
 
   getUnFavoriteNews(allNews: News[]): News[] {
     let unFavoriteNews: News[] = [];
-    let likeItems = JSON.parse(localStorage.getItem('likeItem'))
-    if (likeItems.length === 0) return allNews;
-    allNews.forEach((elem) => {
-      likeItems.forEach(item => {
-        if (elem.source_id != item && likeItems.indexOf(elem.source_id) < 0 && unFavoriteNews.indexOf(elem) < 0) {
-          unFavoriteNews.push(elem);
+    let IdsLikeItems = JSON.parse(localStorage.getItem('likeItem'))
+    if (IdsLikeItems.length === 0) return allNews;
+    
+    allNews.filter(function(elem) {
+      return IdsLikeItems.some(function(element) {
+        if (elem.source_id != element && IdsLikeItems.indexOf(elem.source_id) < 0 && unFavoriteNews.indexOf(elem) < 0) {
+          return unFavoriteNews.push(elem);
         }
       })
     })
     return unFavoriteNews;
   }
 
-  changeFavoriteNews(listNews: News[], index: number) {
-    let favoriteItems = [];
+  changeFavoriteNews(sourceIdNews: number) {
+    let IdsLikeItems = [];
 
     if (JSON.parse(localStorage.getItem('likeItem'))) {
-      favoriteItems = JSON.parse(localStorage.getItem('likeItem'));
+      IdsLikeItems = JSON.parse(localStorage.getItem('likeItem'));
     }
-    if (favoriteItems.indexOf(listNews[index].source_id) === -1) {
-      favoriteItems.push(listNews[index].source_id)
-      localStorage.setItem('likeItem', JSON.stringify(favoriteItems));
+    if (IdsLikeItems.indexOf(sourceIdNews) === -1) {
+      IdsLikeItems.push(sourceIdNews)
+      localStorage.setItem('likeItem', JSON.stringify(IdsLikeItems));
       return true;
     }
     else {
-      favoriteItems.splice(favoriteItems.indexOf(listNews[index].source_id), 1);
-      localStorage.setItem('likeItem', JSON.stringify(favoriteItems));
+      IdsLikeItems.splice(IdsLikeItems.indexOf(sourceIdNews), 1);
+      localStorage.setItem('likeItem', JSON.stringify(IdsLikeItems));
       return false;
     }
   }

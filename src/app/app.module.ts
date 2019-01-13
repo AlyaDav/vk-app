@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MomentModule } from 'angular2-moment';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
-import { InterceptService } from './services/interceptor';
 import { ApiService } from './services/api.service';
 import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
@@ -44,13 +43,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatProgressBarModule,
     MatProgressSpinnerModule
   ],
-  providers: [
-    ApiService, {
-      provide: HTTP_INTERCEPTORS,
-      useClass: InterceptService,
-      multi: true
-    }
-  ],
+  providers: [ ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -37,6 +37,6 @@ export class NewsComponent implements OnInit {
   }
 
   clickLike(i: number) {
-    this.listNews[i].liked = this.newsService.changeFavoriteNews(this.listNews, i);
+    this.listNews[i].liked = this.newsService.changeFavoriteNews(this.listNews[i].source_id);
   }
 }
