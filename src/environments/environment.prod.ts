@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  token: 'eae9790a3c558dfcb222ca87b720fa1bffb99e9fb075a066cc013e0acfc1bd15e4f38c822880fcc9aa167'
+  token: 'c5bef0d8e025e74828ab3b5fbd27458b7690926ae9563a9471086193108e9adff6d9d21f8ef0265730edd'
 };
